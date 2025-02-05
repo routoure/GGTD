@@ -1,0 +1,21 @@
+{
+    ApplicationDescription = "JmrGtd";
+    ApplicationIcon = "icon.tiff";
+    ApplicationName = JmrGtd;
+    ApplicationRelease = 0.1;
+    Authors = "";
+    Copyright = "Copyright (C) 2025 by Jean-Marc Routoure";
+    CopyrightDescription = "Released under CC";
+    FullVersionID = 0.5;
+    URL = "";
+    NSTypes = (
+        {
+             NSName = "jmr";
+             NSHumanReadableName = "JmrGtd Document";
+             NSUnixExtensions = ("jmr");
+             NSDOSExtensions = ("jmr");
+             NSRole = Editor;
+             NSDocumentClass = Document;
+        }
+    );
+}
