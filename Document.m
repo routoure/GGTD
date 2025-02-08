@@ -625,13 +625,13 @@
   
   if ((aTask==nil)&& (aTask1==nil) && (aTask2==nil)){
     // On peut décaler car il y a de la place sur la dernière ligne
-    NSLog(@"On peut enlever");
+    //NSLog(@"On peut enlever");
     int j,i;
     
     int debut=[tableView selectedRow];
     // On recopie les lignes
     for (i=18;i>debut;i--) for (j=0;j<3;j++) {
-      NSLog(@"i%d j%d",i,2*j+1);
+      //NSLog(@"i%d j%d",i,2*j+1);
       JMRTache *aTask4;
       NSString *key1=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,i-1];
       aTask4=[records objectForKey:key1];
@@ -640,7 +640,7 @@
       else [records removeObjectForKey:key2];
     }
     // On enlève la ligne sélectionné
-    NSLog(@"On enleve la dernière ligne");
+    //NSLog(@"On enleve la dernière ligne");
     for (j=0;j<3;j++) {
       NSString *key3=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,debut];
       [records removeObjectForKey:key3];
@@ -658,5 +658,50 @@
   }
     
 }
+
+//---------------------------------------------------------------
+
+- (IBAction)removeRow:(id)sender { 
+  int debut=[tableView selectedRow];
+  JMRTache *aTask = [self getTacheAtColumn:1 atRow:debut];
+  JMRTache *aTask1 = [self getTacheAtColumn:3 atRow:debut];
+  JMRTache *aTask2 = [self getTacheAtColumn:5 atRow:debut];
+  
+  if ((aTask==nil)&& (aTask1==nil) && (aTask2==nil)){
+    // On peut décaler car il y a de la place sur la dernière ligne
+    //NSLog(@"On peut enlever");
+    int j,i;
+    
+    int debut=[tableView selectedRow];
+    // On recopie les lignes
+    for (i=debut;i<18;i++) for (j=0;j<3;j++) {
+      //NSLog(@"i%d j%d",i,2*j+1);
+      JMRTache *aTask4;
+      NSString *key1=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,i+1];
+      aTask4=[records objectForKey:key1];
+      NSString *key2=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,i];
+      if (aTask4!=nil) [records setObject:aTask4 forKey:key2];
+      else [records removeObjectForKey:key2];
+    }
+    // On enlève la ligne sélectionné
+    //NSLog(@"On enleve la dernière ligne");
+    //for (j=0;j<3;j++) {
+    //  NSString *key3=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,debut];
+    //  [records removeObjectForKey:key3];
+    //}
+    // On met à jour les lignes
+    for (i=debut;i<debut;i++) {
+      if ([ [clickedLines objectAtIndex:i+1] isEqual: @"G"]) {
+        [clickedLines replaceObjectAtIndex:i+1 withObject: @"N" ];
+        [clickedLines replaceObjectAtIndex:i withObject: @"G" ];
+      }
+    }
+      
+   [tableView reloadData];
+   [self updateChangeCount:NSChangeDone]; 
+  }
+    
+}
+
 
 @end
