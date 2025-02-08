@@ -116,29 +116,50 @@
     
     // Drag and drop 
     
-    // ajout d'un sous-menu
-     NSMenu *myMenu = [[NSMenu alloc] initWithTitle:@"Tasks"];
-     NSMenuItem *newItem1 = [[NSMenuItem alloc] initWithTitle:@"Delete"
+    // ajout d'un sous-menu Tasks
+     NSMenu *myMenu1 = [[NSMenu alloc] initWithTitle:@"Tasks"];
+     NSMenuItem *newItem11 = [[NSMenuItem alloc] initWithTitle:@"Delete"
                         action:@selector(delete:)
                         keyEquivalent:nil];
-     NSMenuItem *newItem2 = [[NSMenuItem alloc] initWithTitle:@"Done"
+     NSMenuItem *newItem12 = [[NSMenuItem alloc] initWithTitle:@"Done"
                         action:@selector(done:)
                         keyEquivalent:@"d"];
-     NSMenuItem *newItem3 = [[NSMenuItem alloc] initWithTitle:@"Show done tasks"
+     NSMenuItem *newItem13 = [[NSMenuItem alloc] initWithTitle:@"Show done tasks"
                         action:@selector(showDone:)
                         keyEquivalent:nil];
      // Ajouter l'élément au menu
-    [myMenu addItem:newItem1];
-    [myMenu addItem:newItem2];
-    [myMenu addItem:newItem3];
+    [myMenu1 addItem:newItem11];
+    [myMenu1 addItem:newItem12];
+    [myMenu1 addItem:newItem13];
     // Ajouter ce menu à la barre de menus principale
-    [NSApp.mainMenu addItemWithTitle:@"Tasks" action:nil keyEquivalent:@""];
-    [NSApp.mainMenu setSubmenu:myMenu forItem:[NSApp.mainMenu itemWithTitle:@"Tasks"]];
+    [NSApp.mainMenu addItemWithTitle:@"Tasks" action:nil keyEquivalent:nil];
+    [NSApp.mainMenu setSubmenu:myMenu1 forItem:[NSApp.mainMenu itemWithTitle:@"Tasks"]];
 
+    // ajout d'un sous-menu
+     NSMenu *myMenu2 = [[NSMenu alloc] initWithTitle:@"Table"];
+     NSMenuItem *newItem21 = [[NSMenuItem alloc] initWithTitle:@"Add cell"
+                        action:@selector(addCell:)
+                        keyEquivalent:nil];
+     NSMenuItem *newItem22 = [[NSMenuItem alloc] initWithTitle:@"Remove cell"
+                        action:@selector(removeCell:)
+                        keyEquivalent:nil];
+     NSMenuItem *newItem23 = [[NSMenuItem alloc] initWithTitle:@"Add row"
+                        action:@selector(addRow:)
+                        keyEquivalent:nil];
+     NSMenuItem *newItem24 = [[NSMenuItem alloc] initWithTitle:@"Remove row"
+                        action:@selector(removeRow:)
+                        keyEquivalent:nil];
+  
+     
+     // Ajouter l'élément au menu
+    [myMenu2 addItem:newItem21];
+    [myMenu2 addItem:newItem22];
+    [myMenu2 addItem:newItem23];
+    [myMenu2 addItem:newItem24];
+    // Ajouter ce menu à la barre de menus principale
+    [NSApp.mainMenu addItemWithTitle:@"Table" action:nil keyEquivalent:nil];
+    [NSApp.mainMenu setSubmenu:myMenu2 forItem:[NSApp.mainMenu itemWithTitle:@"Table"]];    
         
-        
-     // Lecture des des données    
-     // IL faut aller lire les données puis demander à la Afficher
      
      // On récupère le nom du fichier 
      NSString *documentName= [self fileName];
@@ -221,7 +242,7 @@
          default : [resultat setString:@"o"]; break;                                
          } 
      }
-     else [resultat setString:@"o"];
+     else [resultat setString:@""];
    }    
  }
  
@@ -325,17 +346,17 @@
   
   records=[results objectAtIndex: 0];     
 
-  NSLog(@"%@",records);  
+ 
   
   [doneTasks release];
   doneTasks = [results objectAtIndex: 1];
   
-  NSLog(@"%@",doneTasks);
+  
   
   [clickedLines release ];
   clickedLines = [results objectAtIndex: 2];  
  
-   NSLog(@"%@",clickedLines);
+  
  
   return YES;        
   }
@@ -492,7 +513,7 @@
        
        NSLog(@"Valeur de index %d",index);
        [doneTasks addObject:aDoneTask ];
-       NSString *key=[[NSString alloc] initWithFormat : @"colonne%d-%d", clickedColumn,clickedRow];
+       NSString *key=[NSString stringWithFormat : @"colonne%d-%d", clickedColumn,clickedRow];
        NSLog(@"Valeur de key %@",key);
        [records removeObjectForKey:key];
        
@@ -505,19 +526,31 @@
        //   contextInfo:nil];
        // et On affiche la vue   
        [tableView reloadData];
-       [key release];
+       [self updateChangeCount:NSChangeDone]; 
      }
    }
 }
 
+//---------------------------------------------------------------
+
 - (IBAction) delete:(id)sender {
   NSLog(@"Delete");
-  
+  NSInteger clickedRow=[tableView selectedRow];
+  NSString *key=[NSString stringWithFormat : @"colonne%d-%d", clickedColumn,clickedRow];
+       
+ [records removeObjectForKey:key];
+ [tableView reloadData];
+ [self updateChangeCount:NSChangeDone]; 
 }
 
+
+
+//---------------------------------------------------------------
 - (IBAction)saveDocument:(id)sender {
   [super saveDocument:sender];
 }  
+
+//---------------------------------------------------------------
 
 - (IBAction)infoPanel:(id)sender {
     NSAlert *alert = [[NSAlert alloc] init];
@@ -525,6 +558,105 @@
     [alert setInformativeText:@"Yet Another GTD \nBut with GNUStep \n \n Nobody should have more than 60 tasks to remenber\n If you like this software, please send me a postcard at jmroutoure AT gmail DOT com"];
     [alert addButtonWithTitle:@"OK"];
     [alert runModal]; // Bloque l'exécution jusqu'à la fermeture de l'alerte
+}
+
+//---------------------------------------------------------------
+
+- (IBAction)addCell:(id)sender {
+  
+  NSInteger tmp=[tableView selectedRow]+1;
+  
+  while ([ [clickedLines objectAtIndex:tmp] isEqual: @"N"]) tmp++;
+ 
+  JMRTache *aTask = [self getTacheAtColumn:clickedColumn atRow:tmp-1];
+  if (aTask==nil){
+    int i, debut, fin;
+    debut=[tableView selectedRow];
+    fin=tmp-1;
+    for (i=fin;i>debut;i--) {
+      JMRTache *aTask2;
+      NSString *key1=[NSString stringWithFormat : @"colonne%d-%d", clickedColumn,i-1];
+      aTask2=[records objectForKey:key1];
+      NSString *key2=[NSString stringWithFormat : @"colonne%d-%d", clickedColumn,i];
+      if (aTask2!=nil) [records setObject:aTask2 forKey:key2];
+      else [records removeObjectForKey:key2]; 
+    }
+    NSString *key3=[NSString stringWithFormat : @"colonne%d-%d", clickedColumn,debut];
+    [records removeObjectForKey:key3];
+    [tableView reloadData];
+    [self updateChangeCount:NSChangeDone]; 
+  }
+}
+  
+//---------------------------------------------------------------
+
+- (IBAction)removeCell:(id)sender { 
+  
+  //On recherche la fin de categorie
+  NSInteger tmp=[tableView selectedRow]+1;
+  while ([ [clickedLines objectAtIndex:tmp] isEqual: @"N"]) tmp++;
+  int fin=tmp-1;
+  int i, debut;
+  debut=[tableView selectedRow];  
+  JMRTache *aTask = [self getTacheAtColumn:clickedColumn atRow:debut];
+  if (aTask==nil) {
+    for (i=debut; i<fin;i++) {
+      JMRTache *aTask2;
+      NSString *key1=[NSString stringWithFormat : @"colonne%d-%d", clickedColumn,i+1];
+      NSString *key2=[NSString stringWithFormat : @"colonne%d-%d", clickedColumn,i];
+      aTask2=[records objectForKey:key1];
+      if (aTask2!=nil) [records setObject:aTask2 forKey:key2];
+      else  [records removeObjectForKey:key2];      
+       
+    }
+   NSString *key3=[NSString stringWithFormat : @"colonne%d-%d", clickedColumn,fin];
+   [records removeObjectForKey:key3];
+   [tableView reloadData];
+   [self updateChangeCount:NSChangeDone]; 
+  }
+}
+
+//---------------------------------------------------------------
+
+- (IBAction)addRow:(id)sender { 
+  JMRTache *aTask = [self getTacheAtColumn:1 atRow:19];
+  JMRTache *aTask1 = [self getTacheAtColumn:3 atRow:19];
+  JMRTache *aTask2 = [self getTacheAtColumn:5 atRow:19];
+  
+  if ((aTask==nil)&& (aTask1==nil) && (aTask2==nil)){
+    // On peut décaler car il y a de la place sur la dernière ligne
+    NSLog(@"On peut enlever");
+    int j,i;
+    
+    int debut=[tableView selectedRow];
+    // On recopie les lignes
+    for (i=18;i>debut;i--) for (j=0;j<3;j++) {
+      NSLog(@"i%d j%d",i,2*j+1);
+      JMRTache *aTask4;
+      NSString *key1=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,i-1];
+      aTask4=[records objectForKey:key1];
+      NSString *key2=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,i];
+      if (aTask4!=nil) [records setObject:aTask4 forKey:key2];
+      else [records removeObjectForKey:key2];
+    }
+    // On enlève la ligne sélectionné
+    NSLog(@"On enleve la dernière ligne");
+    for (j=0;j<3;j++) {
+      NSString *key3=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,debut];
+      [records removeObjectForKey:key3];
+    }
+    // On met à jour les lignes
+    for (i=18;i>debut;i--) {
+      if ([ [clickedLines objectAtIndex:i-1] isEqual: @"G"]) {
+        [clickedLines replaceObjectAtIndex:i-1 withObject: @"N" ];
+        [clickedLines replaceObjectAtIndex:i withObject: @"G" ];
+      }
+    }
+      
+   [tableView reloadData];
+   [self updateChangeCount:NSChangeDone]; 
+  }
+    
 }
 
 @end
