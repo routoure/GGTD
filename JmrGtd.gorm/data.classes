@@ -2,8 +2,36 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "orderFrontFontPanel:"
+	    "ChangeMinimumFontSize:",
+	    "changeColumneWidth:",
+	    "changeDefautFontSize:",
+	    "changeSelectedDirectory:",
+	    "chooseDirectoryBehavior:",
+	    "closePreferencePanel:",
+	    "orderFrontFontPanel:",
+	    "showPreferencePanel:"
 	);
 	Super = NSObject;
+    };
+    PreferenceController = {
+	Actions = (
+	    "ChangeMinimumFontSize:",
+	    "changeColumneWidth:",
+	    "changeDefautFontSize:",
+	    "changeSelectedDirectory:",
+	    "chooseDirectoryBehavior:",
+	    "showPreferencePanel:",
+	    "closePreferencePanel:"
+	);
+	Outlets = (
+	    defaultFileName,
+	    defaultFontSize,
+	    minimunFontSize,
+	    directoryName,
+	    defaultFontSizeStepper,
+	    minimunFontSizeStepper,
+	    columnWithSlider
+	);
+	Super = NSWindowController;
     };
 }

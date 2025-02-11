@@ -2,7 +2,8 @@
 
 #import "Document.h"
 #import "Model.h"
-
+#import "RightView.h"
+#import "PreferenceController.h"
 @implementation Document
 
 - (NSString *) windowNibName
@@ -22,16 +23,26 @@
   willDisplayCell:(id)cell 
    forTableColumn:(NSTableColumn *)tableColumn 
               row:(NSInteger)row {
-    
+    //NSLog(@"Will displayCell");
     if ([cell isKindOfClass:[NSTextFieldCell class]]) {
         NSTextFieldCell *textCell = (NSTextFieldCell *)cell;
-            
+        
+        NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+        [textCell setFont:[NSFont systemFontOfSize:[defaults integerForKey: JMRDefaultFontSizeKey]]];    
+        
+        
+        // On ne redimensionne que les colonnes pairs
+        NSInteger column= [[thisTableView tableColumns] indexOfObject:tableColumn];
+        
+        if(column%2==1)[tableColumn setWidth:[defaults integerForKey: JMRColumnWidthKey]];
+        
+        
         // mise à la ligne de la cellule  
         [textCell setWraps:YES];
         [textCell setLineBreakMode:NSLineBreakByWordWrapping];
         // Supprimer les bordures et le style par défa 
       
-        NSInteger column= [[thisTableView tableColumns] indexOfObject:tableColumn];
+        //NSInteger column= [[thisTableView tableColumns] indexOfObject:tableColumn];
         
         // Dessin d'une ligne épaisse en bas d'une row
         if ([[clickedLines objectAtIndex:row] isEqual: @"G"]  ) {
@@ -63,7 +74,7 @@
 {
     NSTableColumn *column;
     NSArray *columns = [tableView tableColumns];
-    
+    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
     column = [columns objectAtIndex: 0];
     [column setWidth: 25];
     [column setEditable: NO];
@@ -72,7 +83,7 @@
     [[column headerCell] setStringValue: @""];
   
     column = [columns objectAtIndex: 1];
-    [column setWidth: 125];
+    [column setWidth: [defaults integerForKey: JMRColumnWidthKey]];
     [column setEditable: YES];
     [column setResizable: YES];
     [column setIdentifier: @"colonne1"];
@@ -86,7 +97,7 @@
     [[column headerCell] setStringValue: @""];
     
     column = [columns objectAtIndex: 3];
-    [column setWidth: 125];
+    [column setWidth: [defaults integerForKey: JMRColumnWidthKey]];
     [column setEditable: YES];
     [column setResizable: YES];
     [column setIdentifier: @"colonne3"];
@@ -101,7 +112,7 @@
 
     column = [[NSTableColumn alloc] initWithIdentifier: @"colonne5"];
     
-    [column setWidth: 125];
+    [column setWidth: [defaults integerForKey: JMRColumnWidthKey]];
     [column setEditable: YES];
     [column setResizable: YES];
     
@@ -113,6 +124,7 @@
     [tableView setAutoresizesAllColumnsToFit: YES];
     
     [tableView setDocument: self];
+    [rightView setDocument: self];
     
     // Drag and drop 
     
@@ -127,10 +139,14 @@
      NSMenuItem *newItem13 = [[NSMenuItem alloc] initWithTitle:@"Show done tasks"
                         action:@selector(showDone:)
                         keyEquivalent:nil];
+     NSMenuItem *newItem14 = [[NSMenuItem alloc] initWithTitle:@"Add new category"
+                        action:@selector(addCategory:)
+                        keyEquivalent:nil];
      // Ajouter l'élément au menu
     [myMenu1 addItem:newItem11];
     [myMenu1 addItem:newItem12];
     [myMenu1 addItem:newItem13];
+    [myMenu1 addItem:newItem14];
     // Ajouter ce menu à la barre de menus principale
     [NSApp.mainMenu addItemWithTitle:@"Tasks" action:nil keyEquivalent:nil];
     [NSApp.mainMenu setSubmenu:myMenu1 forItem:[NSApp.mainMenu itemWithTitle:@"Tasks"]];
@@ -319,7 +335,7 @@
   {
     [tableView deselectAll:nil];
     
-    NSArray *objectsToSave =[NSArray arrayWithObjects:records, doneTasks, clickedLines,nil ];
+    NSArray *objectsToSave =[NSArray arrayWithObjects:records, doneTasks, clickedLines,[rightView getLabels],nil ];
     NSLog(@"%@",objectsToSave);
     
     // En GNUstep, utiliser NSKeyedArchiver sans requiringSecureCoding
@@ -356,6 +372,13 @@
   [clickedLines release ];
   clickedLines = [results objectAtIndex: 2];  
  
+  if ([results count]==4) {
+    NSMutableArray *newLabels= [[NSMutableArray alloc] init ];
+    
+    newLabels = [results objectAtIndex: 3];
+    [rightView setLabels:newLabels];
+  }
+    
   
  
   return YES;        
@@ -658,6 +681,12 @@
   }
     
 }
+
+
+- (IBAction) addCategory:(id)sender { 
+  [rightView addCategory];
+}
+
 
 //---------------------------------------------------------------
 

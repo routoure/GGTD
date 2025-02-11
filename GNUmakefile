@@ -2,11 +2,10 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 APP_NAME = JmrGtd
 
-JmrGtd_HEADERS = Document.h Model.h RightView.h
+JmrGtd_HEADERS = Document.h Model.h RightView.h PreferenceController.h
 
-JmrGtd_OBJC_FILES = main.m Mouse.m RightView.m \
-                   Document.m\
-		   Model.m
+JmrGtd_OBJC_FILES = main.m Mouse.m RightView.m PreferenceController.m\
+                   Document.m Model.m
 
 JmrGtd_RESOURCE_FILES = JmrGtdInfo.plist \
                        JmrGtd.gorm \

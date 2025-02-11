@@ -2,11 +2,21 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     Document = {
 	Actions = (
+	    "cut:",
+	    "copy:",
+	    "done:"
 	);
 	Outlets = (
-	    tableView
+	    tableView,
+	    rightView
 	);
 	Super = NSDocument;
+    };
+    FirstResponder = {
+	Actions = (
+	    "done:"
+	);
+	Super = NSObject;
     };
     MyTableView = {
 	Actions = (

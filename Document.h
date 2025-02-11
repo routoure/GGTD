@@ -6,6 +6,7 @@
 @interface Document : NSDocument
 {
   id tableView;
+  id rightView;
   NSMutableDictionary *records;
   NSMutableArray *doneTasks;
   NSMutableArray *clickedLines; //An array of 20 BOOL indicating which lines has to be increased in width 
@@ -23,5 +24,5 @@
 -(void) done:(id)sender;
       
 - (JMRTache *) getTacheAtColumn: (NSInteger)  aColumn  atRow: (NSInteger)aRow ;
- 
+
 @end

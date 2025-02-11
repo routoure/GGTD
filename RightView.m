@@ -5,6 +5,8 @@
 
 @implementation RightView
 
+
+// ------------------------------------------------------------------------------------
 - (instancetype) initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -16,6 +18,18 @@
     return self;
 }
 
+// ------------------------------------------------------------------------------------
+
+- (void) addCategory {
+  NSMutableDictionary *label = [[NSMutableDictionary alloc] init];
+  [label setObject:[NSString stringWithFormat:@"Nouveau"] forKey:@"text"];
+  [label setObject:[NSNumber numberWithFloat:0] forKey:@"position"];
+  [labels addObject:label];
+  
+  [self setNeedsDisplay:YES];
+} 
+// ------------------------------------------------------------------------------------
+
 
 
 - (void) initializeLabels {
@@ -26,7 +40,7 @@
         NSMutableDictionary *label = [[NSMutableDictionary alloc] init];
         [label setObject:[NSString stringWithFormat:@"Texte %d", i+1] forKey:@"text"];
         // TBD Shuld be place at the middle of the view ; t depends of he size of the text
-        [label setObject:[NSNumber numberWithFloat:(i + 1.0) * step] forKey:@"position"];
+        [label setObject:[NSNumber numberWithFloat:(i +1 ) * step] forKey:@"position"];
         [labels addObject:label];
     }
 
@@ -34,6 +48,7 @@
 }
 
 
+// ------------------------------------------------------------------------------------
 
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -71,22 +86,26 @@
 }
 
 
+// ------------------------------------------------------------------------------------
 
 - (NSInteger)indexForPoint:(NSPoint)point {
-    NSInteger i;
-    for ( i = 0; i < [labels count]; i++) {
-        float pos = [[[labels objectAtIndex:i] objectForKey:@"position"] floatValue];
-        NSLog(@"Pos : %f ",pos);
-        
-        float textSize=80;
-        //NSRect rect = NSMakeRect(pos.x, pos, textSize.width, textSize.height);
-        
-        //if (NSPointInRect(point, rect)) {
-       if ((pos>point.y)&&(pos<point.y+textSize/2))  return i;
-        
+    NSInteger i=0, tmp;
+    tmp=-1;
+    
+    while (i < [labels count] ) {
+      float pos = [[[labels objectAtIndex:i] objectForKey:@"position"] floatValue];
+      NSLog(@"%f %f",pos,point.y);
+      float textSize=80.0 ;
+      if ((point.y>pos)&&(point.y<pos+textSize))  {tmp=i; NSLog(@"Trouvé");}
+      i++;  
+      
     }
-    return -1;
+    return tmp;
 }
+
+
+// ------------------------------------------------------------------------------------
+
 
 - (void)mouseDown:(NSEvent *)event {
     NSLog(@"MouseDown");
@@ -109,6 +128,9 @@
     }
 }
 
+
+// ------------------------------------------------------------------------------------
+
 - (void)mouseDragged:(NSEvent *)event {
     if (draggingIndex != -1) {
        
@@ -119,16 +141,30 @@
         NSMutableDictionary *label=[labels objectAtIndex:draggingIndex];
         // WE have to encapsulte NSPoint in *NSValue
         [label setObject:[NSNumber numberWithFloat:pos] forKey:@"position"];
-        [labels replaceObjectatIndex:draggingIndex withObject:label];
+        [labels replaceObjectAtIndex:draggingIndex withObject:label];
         [self setNeedsDisplay:YES];
+        [document updateChangeCount:NSChangeDone]; 
     }
 }
 
+
+
+// ------------------------------------------------------------------------------------
 - (void)mouseUp:(NSEvent *)event {
-    draggingIndex = -1;
+    
+    // if mouseUp event is performed with y<0 then the text should have to be removed from the mutable array
+    if (draggingIndex!=-1) { 
+    NSPoint location = [self convertPoint:[event locationInWindow] fromView:nil];
+    if (location.y<0) {[labels removeObjectAtIndex : draggingIndex];}
+    draggingIndex = -1; 
+    [self setNeedsDisplay:YES];
+    [document updateChangeCount:NSChangeDone];  
+  }
 }
 
 
+
+// ------------------------------------------------------------------------------------
 
 - (void)startEditingLabelAtIndex:(NSInteger)index {
     if (editingField != nil) {
@@ -151,7 +187,7 @@
      NSSize textSize = [currentText sizeWithAttributes:attributes];
 
 
-    editingField = [[NSTextField alloc] initWithFrame:NSMakeRect(10, position+textSize.width/2+5, textSize.width+10, textSize.height+10 )];
+    editingField = [[NSTextField alloc] initWithFrame:NSMakeRect(10, position+textSize.width/2+5, textSize.width+15, textSize.height+10 )];
     [editingField setStringValue:currentText];
     [editingField setFont:[NSFont systemFontOfSize:10]];
     [editingField setAlignment:NSTextAlignmentLeft];
@@ -168,7 +204,7 @@
     [[self window] makeFirstResponder:editingField];
 }
 
-
+// ------------------------------------------------------------------------------------
 
 
 - (void)endEditing {
@@ -180,5 +216,26 @@
         [self setNeedsDisplay:YES];
     }
 }
+
+// ------------------------------------------------------------------------------------
+
+- (NSMutableArray *) getLabels{
+  return labels;
+}
+
+// ------------------------------------------------------------------------------------
+
+- (void) setLabels: (NSMutableArray *)newLabels {
+  [newLabels retain];
+  if (labels!=nil) [labels release];
+  labels=newLabels;
+}
+
+// ------------------------------------------------------------------------------------
+
+-(void) setDocument:(Document *) unDocument{
+  document=unDocument;
+}
+
 
 @end
