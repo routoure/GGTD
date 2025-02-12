@@ -15,7 +15,7 @@ NSString * const JMRColumnWidthKey = @"ColumnWidth";
 {
 
   int resultat=[sender intValue];
-    NSLog(@"ChangeMinimumFontSize %d",resultat);
+    
   if (resultat>[defaultFontSize intValue]) {
     resultat=[defaultFontSize intValue];
     [sender setIntValue:resultat];
@@ -37,9 +37,11 @@ NSString * const JMRColumnWidthKey = @"ColumnWidth";
 - (IBAction) changeColumneWidth: (id)sender
 {
   int resultat=[sender intValue];
-  NSLog(@" %d",resultat);
+  [columnWidth setIntValue:resultat];
+  
   NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setInteger:[columnWithSlider intValue] forKey: JMRColumnWidthKey ];
+  [defaults setInteger:resultat forKey: JMRColumnWidthKey ];
+  NSLog(@"%d",resultat);
   [self tableViewRefresh];
 }
 
@@ -47,10 +49,45 @@ NSString * const JMRColumnWidthKey = @"ColumnWidth";
 
 - (IBAction) changeSelectedDirectory: (id)sender
 {
+  NSOpenPanel *panel = [NSOpenPanel openPanel];
+
+ [panel setCanChooseFiles:NO];        // Désactive la sélection de fichiers
+ [panel setCanChooseDirectories:YES]; // Active la sélection de répertoires
+ [panel setAllowsMultipleSelection:NO]; // Permet de ne sélectionner qu’un seul dossier
+
+  if ([panel runModal] == NSModalResponseOK) {
+        NSURL *selectedURL = [[panel URLs] firstObject]; // Récupère le répertoire sélectionné
+        //NSLog(@"Répertoire sélectionné : %@", [selectedURL path]);
+        
+        [directoryName setStringValue: [selectedURL path] ];
+        [directoryName sizeToFit];
+        
+        
+        NSString *tmp=[NSString stringWithFormat:@"%s", [selectedURL path] ];
+        NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:tmp forKey: JMRDirectoryNameKey ];
+        }
 }
 
+
 - (IBAction) chooseDirectoryBehavior: (id)sender
-{
+{ 
+  
+  NSLog(@"Click dans cette zone");
+  NSInteger selectedRow = [sender selectedRow];
+  //NSLog(@"Bouton sélectionné : %@", [[sender cellAtRow:selectedRow column:0] title]);
+  NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+  switch (selectedRow) {
+    case 0: 
+      
+        [defaults setObject:[NSString stringWithFormat:@"%s/Desktop/", NSHomeDirectory()]  forKey: JMRDirectoryNameKey ];
+      break;
+    case 1:
+        [defaults setObject:NSHomeDirectory() forKey: JMRDirectoryNameKey ];
+      break;   
+  }
+  
+
 }
 
 - (int)getMinimunFontSize {
@@ -73,6 +110,7 @@ NSString * const JMRColumnWidthKey = @"ColumnWidth";
    int tmp;
    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
    tmp=[defaults integerForKey: JMRColumnWidthKey];
+   NSLog(@"Préference lue %d");
    if (tmp==0) tmp=125;
    return tmp;
 }
@@ -81,10 +119,20 @@ NSString * const JMRColumnWidthKey = @"ColumnWidth";
    NSString *tmp;
    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
    tmp=[defaults objectForKey: JMRDefaultFileNameKey];
-   if (tmp==nil) tmp=[ NSString stringWithFormat:@"Tasks"];
+   if (tmp==nil) 
+     tmp=[ NSString stringWithFormat:@"Tasks"];       
    return tmp;  
 }
 
+
+- (NSString *) getDefaultDirectory{
+   NSString *tmp;
+   NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+   tmp=[defaults objectForKey: JMRDirectoryNameKey];
+   if (tmp==nil) 
+     tmp = [NSString stringWithFormat:@"%s/Desktop/", NSHomeDirectory() ] ;      
+   return tmp;  
+}
 
 
 
@@ -93,10 +141,25 @@ NSString * const JMRColumnWidthKey = @"ColumnWidth";
    // Il faut aller chercher les valeur 
    [defaultFontSize setIntValue: [self  getDefaultFontSize]];
    [defaultFontSizeStepper setIntValue:[self  getDefaultFontSize]];
+
    [minimunFontSize setIntValue:[self  getMinimunFontSize]];
    [minimunFontSizeStepper setIntValue:[self  getMinimunFontSize]];
-   [columnWithSlider setIntValue:[self  getColumnWidth]];
+
+   [columnWidthSlider setIntValue:[self  getColumnWidth]];
+   [columnWidth setIntValue:[self  getColumnWidth]];
+
+
+   
    [defaultFileName setStringValue:[self getDefaultFileName]];
+   [directoryName setStringValue:@""];
+   [directoryChoice selectCellAtRow: -1 column:0];
+   
+   //Mise à jour du panneau en fonction de la valeur de Diectory
+   NSString *directoryNameTmp=[self getDefaultDirectory];
+   if ([directoryNameTmp isEqual: [NSString stringWithFormat:@"%s/Desktop/", NSHomeDirectory() ] ]   ) [directoryChoice selectCellAtRow: 0 column:0];
+  else  if ([directoryNameTmp isEqual: [NSString stringWithFormat:@"%s", NSHomeDirectory() ] ] ) [directoryChoice selectCellAtRow: 1 column:0];
+   else [directoryName setStringValue:directoryNameTmp];
+    
    
    
   [self showWindow:self];
@@ -107,7 +170,7 @@ NSString * const JMRColumnWidthKey = @"ColumnWidth";
   // Il faut enregistrer les valeurs par défauts à la fermeture du panel
    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
    
-   [defaults setInteger:[minimunFontSize intValue] forKey: JMRMinimuFontSizeKey ];
+   //[defaults setInteger:[minimunFontSize intValue] forKey: JMRMinimuFontSizeKey ];
    
    [defaults setObject:[defaultFileName stringValue] forKey: JMRDefaultFileNameKey ];
   
@@ -123,7 +186,7 @@ NSString * const JMRColumnWidthKey = @"ColumnWidth";
   NSDocument *currentDocument = [[NSDocumentController sharedDocumentController] currentDocument];
   NSWindow *documentWindow = [currentDocument windowForSheet];
   NSTableView *tableView2 = [documentWindow.contentView viewWithTag:100];
-  NSLog(@"tableview2 trouvé %@",tableView2);
+  //NSLog(@"tableview2 trouvé %@",tableView2);
   [tableView2 setNeedsDisplay:YES];
 
 

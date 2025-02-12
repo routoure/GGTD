@@ -34,15 +34,17 @@
         // On ne redimensionne que les colonnes pairs
         NSInteger column= [[thisTableView tableColumns] indexOfObject:tableColumn];
         
-        if(column%2==1)[tableColumn setWidth:[defaults integerForKey: JMRColumnWidthKey]];
-        
+        if ((column%2==1)&&(row==1)) {
+          int width=[defaults integerForKey: JMRColumnWidthKey];
+          [tableColumn setWidth:width];
+          NSLog(@"width:%d",width);
+        }
         
         // mise à la ligne de la cellule  
         [textCell setWraps:YES];
         [textCell setLineBreakMode:NSLineBreakByWordWrapping];
         // Supprimer les bordures et le style par défa 
-      
-        //NSInteger column= [[thisTableView tableColumns] indexOfObject:tableColumn];
+     
         
         // Dessin d'une ligne épaisse en bas d'une row
         if ([[clickedLines objectAtIndex:row] isEqual: @"G"]  ) {
@@ -393,8 +395,15 @@
     clickedLines=[[NSMutableArray alloc] init];
     // Defalt name of the documen.
     // should be done with the preferences
-    [self setFileName:@"MyTask.jmr"]; 
-    //[self setFileType:@"jmr"];
+    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *fileName=[defaults objectForKey: JMRDefaultFileNameKey];
+    if ((fileName==nil)||( [fileName isEqual:@""]) ) fileName=[NSString  stringWithFormat:@"tasks"]; 
+      
+    NSString *directory=[defaults objectForKey: JMRDirectoryNameKey];
+    if ((directory==nil)||( [directory isEqual:@""]))  directory=[NSString stringWithFormat:@"%@/Desktop/", NSHomeDirectory()  ]; 
+      
+    [self setFileName:[NSString stringWithFormat:@"%@/%@.jmr", directory,fileName]];
+    [self setFileType:@"jmr"];
     int i;
     for (i=0;i<=20;i++) 
       if ((i%5)==0) [clickedLines insertObject:@"G" atIndex:i];

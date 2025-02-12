@@ -30,7 +30,9 @@
 	    directoryName,
 	    defaultFontSizeStepper,
 	    minimunFontSizeStepper,
-	    columnWithSlider
+	    columnWidthSlider,
+	    columnWidth,
+	    directoryChoice
 	);
 	Super = NSWindowController;
     };

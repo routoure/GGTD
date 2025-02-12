@@ -21,7 +21,9 @@ extern NSString * const JMRDirectoryNameKey;
   IBOutlet id directoryName;
   IBOutlet id defaultFontSizeStepper;
   IBOutlet id minimunFontSizeStepper;
-  IBOutlet id columnWithSlider;
+  IBOutlet id columnWidthSlider;
+  IBOutlet id columnWidth;
+  IBOutlet id directoryChoice;
  
 }
 

@@ -9,7 +9,7 @@
   id rightView;
   NSMutableDictionary *records;
   NSMutableArray *doneTasks;
-  NSMutableArray *clickedLines; //An array of 20 BOOL indicating which lines has to be increased in width 
+  NSMutableArray *clickedLines;
   NSInteger clickedColumn; 
 }
 - (void) gestionClickAtRow: (NSInteger) row 
