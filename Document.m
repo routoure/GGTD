@@ -150,7 +150,7 @@
     [myMenu1 addItem:newItem13];
     [myMenu1 addItem:newItem14];
     // Ajouter ce menu à la barre de menus principale
-    [NSApp.mainMenu addItemWithTitle:@"Tasks" action:nil keyEquivalent:nil];
+    [NSApp.mainMenu addItemWithTitle:@"Tasks" action:NULL keyEquivalent:nil];
     [NSApp.mainMenu setSubmenu:myMenu1 forItem:[NSApp.mainMenu itemWithTitle:@"Tasks"]];
 
     // ajout d'un sous-menu
@@ -175,7 +175,7 @@
     [myMenu2 addItem:newItem23];
     [myMenu2 addItem:newItem24];
     // Ajouter ce menu à la barre de menus principale
-    [NSApp.mainMenu addItemWithTitle:@"Table" action:nil keyEquivalent:nil];
+    [NSApp.mainMenu addItemWithTitle:@"Table" action:NULL keyEquivalent:nil];
     [NSApp.mainMenu setSubmenu:myMenu2 forItem:[NSApp.mainMenu itemWithTitle:@"Table"]];    
         
      
@@ -691,6 +691,8 @@
     
 }
 
+//---------------------------------------------------------------
+
 
 - (IBAction) addCategory:(id)sender { 
   [rightView addCategory];
@@ -710,7 +712,7 @@
     //NSLog(@"On peut enlever");
     int j,i;
     
-    int debut=[tableView selectedRow];
+    //int debut=[tableView selectedRow];
     // On recopie les lignes
     for (i=debut;i<18;i++) for (j=0;j<3;j++) {
       //NSLog(@"i%d j%d",i,2*j+1);
@@ -728,7 +730,7 @@
     //  [records removeObjectForKey:key3];
     //}
     // On met à jour les lignes
-    for (i=debut;i<debut;i++) {
+    for (i=debut;i<18;i++) {
       if ([ [clickedLines objectAtIndex:i+1] isEqual: @"G"]) {
         [clickedLines replaceObjectAtIndex:i+1 withObject: @"N" ];
         [clickedLines replaceObjectAtIndex:i withObject: @"G" ];

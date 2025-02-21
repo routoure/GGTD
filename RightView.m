@@ -72,7 +72,7 @@
 
           // Crée et applique une transformation de rotation
           NSAffineTransform *transform = [NSAffineTransform transform];
-          [transform translateXBy:10 yBy:position];
+          [transform translateXBy:15 yBy:position];
           [transform rotateByDegrees:90]; // Rotation de 90° pour un texte vertical
           [transform concat];
 

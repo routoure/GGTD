@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Categories=X-GNUstep;
-Name=JmrGtd
-StartupWMClass=JmrGtd
-Comment=JmrGtd
-Exec=/usr/local/bin/openapp JmrGtd
-MimeType=
