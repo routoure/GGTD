@@ -22,7 +22,7 @@ For each tasks and using symbols derived from bullets journal, I label each task
 
 I added a symbol before the length symbol to described the state of the task :
 * ! : urgent
-* > : programmed
+* \> : programmed
 * < : started
 
 
@@ -35,17 +35,24 @@ This method is thus a mix of bullet notation journal and kanban table.
 
 ## Installation
 
-If gnustep is correctly installed on your computer
- make
+If gnustep is correctly installed on your computer : 
+
+```make```
+
 should build the app and 
 
-sudo -E make install
+```sudo -E make install```
 
 should install it
 
-
- 
-
+## Using the app
+* double-clic in a big cell let you type a new task. When a new task is create, the symbol o is attached to it
+* you can click on the symbol to change the length of the task
+* you can control-click on the symbol to change the state of the task
+* you can rename (double-click) and move the category one the left
+* you can remove of add large horizontal lines between the category : the app does not control the position of these lines according to the position of the categories.  
+* preferences panel let you change the width of the columns and the size font used in the cells. 
+* moving task from one place to another is perfomed usinf cut and paste.
 
 
 
