@@ -31,7 +31,18 @@ I also plotted an horizontal line between the group of tasks on the same subject
 
 I obtained finally a sheet with 60 tasks max classified in length, state and urgency. I decided to create the app when I was bore of erasing and rewriting one tasks from one column or row to another and changing the place of the horizontal line.
 
-This method is this a mix of notation used in bullet journal and kanban.
+This method is thus a mix of bullet notation journal and kanban table.
+
+## Installation
+
+If gnustep is correctly installed on your computer
+ make
+should build the app and 
+
+sudo -E make install
+
+should install it
+
 
  
 
