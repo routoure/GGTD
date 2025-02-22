@@ -66,7 +66,7 @@ see TODO.gtd file. This file also indicated the bugs of the current version.
 
 
 ## Licence
-This software is provided as is with a GPL v3 licence. If you like it, please send me a postcard at [nicepi31.wezegi99@murena.io](nicepi31.wezegi99@murena.io). Comments and remarks are also welcome !
+This software is provided as is with a GPL v3 licence. If you like it, please send me a postcard at [mailto:nicepi31.wezegi99@murena.io](nicepi31.wezegi99@murena.io). Comments and remarks are also welcome !
 
 
 
