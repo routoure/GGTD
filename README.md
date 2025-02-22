@@ -7,31 +7,33 @@ Ggtd is yet  another "Get Things Done" app but using GNUstep. Another name shoul
 
 The aim of this small app is 
  * to have a complete view of all the pending tasks, 
- * to clearly indentify the length of the tasks avec the priority
+ * to clearly identify the length, priority, state of the tasks,
  * to be efficient when creating a new task
  * and even more...
 
 ## How it works
  
-This app has first being created using a sheet of paper and a eraser : I have drawn 3 columns labelled "today", "after", "to keep in mind" and I start to note my tasks according to these description. I decide that only one face of the sheet should have to be used and due to tha avalaible space and of the size of my writing only 20 lines could then be used. 
+This app has first being created using a sheet of paper and a eraser : I have drawn 3 columns labelled "today", "after", "to keep in mind" and I start to note my tasks according to these descriptions. I decide that only one face of the sheet should have to be used and due to the avalaible space and of the size of my writing only 20 lines could then be used. 
 
-For each tasks and using symbols derived from bullets journal, I label each task with the following  symbols for the length :
+Using symbols derived from bullets journal, I label each task with the following  symbols for the length :
 * . : a short task
 * o : an moderate task
 * O : a long task
 
-I added a symbol before the length symbol to described the state of the task :
+I added a symbol before the symbol .|o|O to described the state of the task :
 * ! : urgent
 * \> : programmed
 * < : started
 
 
-I also plotted an horizontal line between the group of tasks on the same subject ("perso", "sport", etc.
+I also  drawn an horizontal line between the group of tasks of the same category ("perso", "sport", etc.
 
 
-I obtained finally a sheet with 60 tasks max classified in length, state and urgency. I decided to create the app when I was bore of erasing and rewriting one tasks from one column or row to another and changing the place of the horizontal line.
+I obtained finally a sheet with 60 tasks max classified in length, state and urgency and category. It was very efficient. This method is thus a mix of bullet notation journal and kanban table.
 
-This method is thus a mix of bullet notation journal and kanban table.
+I decided to create the app when the paper was so used that the eraser was no more working.
+
+
 
 ## Installation
 
@@ -53,12 +55,20 @@ should install it
 * you can remove of add large horizontal lines between the category : the app does not control the position of these lines according to the position of the categories.  
 * preferences panel let you change the width of the columns and the size font used in the cells. 
 * moving task from one place to another is perfomed usinf cut and paste.
+* the default directory where the task file is create if the user Desktop directory
+* the default filename is "tasks.gtd"
 
+
+## TODO and BUGS
+The first public version is labelled 0.3. 
+
+see TODO.gtd file. This file also indicated the bugs of the current version.
+
+
+## Licence
+This software is provided as is with a GPL v3 licence. If you like it, please send me a postcard at [nicepi31.wezegi99@murena.io](nicepi31.wezegi99@murena.io). Comments and remarks are also welcome !
 
 
 
  
  
- 
-
-
