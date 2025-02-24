@@ -1,4 +1,22 @@
-/* All Rights reserved */
+/* 
+   Copyright (C) 2025 Jean-Marc Routoure <jmroutoure@mailbox.org>
+
+   This file is part of Ggtd application
+
+   Ggtd is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
+ 
+   This application is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111 USA.
+*/
 
 #import "Document.h"
 #import "Model.h"
@@ -36,8 +54,22 @@
         
         if ((column%2==1)&&(row==1)) {
           int width=[defaults integerForKey: JMRColumnWidthKey];
+          if (width==0) width=125;
           [tableColumn setWidth:width];
-          NSLog(@"width:%d",width);
+           // On ajoute la taille de la fenêtre 
+          NSRect tableFrame = [tableView frame];
+  
+     
+         // Récupérer la fenêtre
+         NSWindow *window = [[[self windowControllers] firstObject] window];
+         NSRect windowFrame = [window frame];
+
+         
+         // Définir la nouvelle taille de la fenêtre
+         windowFrame.size.width = tableFrame.size.width + 50; // Ajouter une marge si nécessaire
+    
+         // Appliquer la nouvelle taille
+         [window setFrame:windowFrame display:YES animate:NO];
         }
         
         // mise à la ligne de la cellule  
@@ -77,7 +109,15 @@
     NSTableColumn *column;
     NSArray *columns = [tableView tableColumns];
     NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+    NSInteger width;
+    // First time the APP is lanched : 
+    if ([defaults integerForKey: JMRColumnWidthKey]==0) width=125;
+      else width=[defaults integerForKey: JMRColumnWidthKey];
+    NSLog(@"%d",width);    
+    
     column = [columns objectAtIndex: 0];
+    
+        
     [column setWidth: 25];
     [column setEditable: NO];
     [column setResizable: NO];
@@ -85,11 +125,11 @@
     [[column headerCell] setStringValue: @""];
   
     column = [columns objectAtIndex: 1];
-    [column setWidth: [defaults integerForKey: JMRColumnWidthKey]];
+    [column setWidth: width];
     [column setEditable: YES];
     [column setResizable: YES];
     [column setIdentifier: @"colonne1"];
-    [[column headerCell] setStringValue: @"Rapidement"];
+    [[column headerCell] setStringValue: @"Now"];
   
     column = [columns objectAtIndex: 2];
     [column setWidth: 25];
@@ -99,11 +139,11 @@
     [[column headerCell] setStringValue: @""];
     
     column = [columns objectAtIndex: 3];
-    [column setWidth: [defaults integerForKey: JMRColumnWidthKey]];
+    [column setWidth: width];
     [column setEditable: YES];
     [column setResizable: YES];
     [column setIdentifier: @"colonne3"];
-    [[column headerCell] setStringValue: @"Bientôt"];
+    [[column headerCell] setStringValue: @"After"];
 
     column = [columns objectAtIndex: 4];
     [column setWidth: 25];
@@ -114,11 +154,11 @@
 
     column = [[NSTableColumn alloc] initWithIdentifier: @"colonne5"];
     
-    [column setWidth: [defaults integerForKey: JMRColumnWidthKey]];
+    [column setWidth: width];
     [column setEditable: YES];
     [column setResizable: YES];
     
-    [[column headerCell] setStringValue: @"Pour mémoire"];
+    [[column headerCell] setStringValue: @"In mind"];
   
     [tableView addTableColumn: column];
     [column release];
@@ -127,8 +167,6 @@
     
     [tableView setDocument: self];
     [rightView setDocument: self];
-    
-    // Drag and drop 
     
     // ajout d'un sous-menu Tasks
      NSMenu *myMenu1 = [[NSMenu alloc] initWithTitle:@"Tasks"];
@@ -185,6 +223,27 @@
      //NSLog(@"Lecture des données enregistré dans le fichier %@",documentName);
      [self readFromFile:documentName ofType:@""];
      
+     // On ajoute la taille de la fenêtre 
+     
+     
+     NSRect tableFrame = [tableView frame];
+    NSLog(@"taille %f",tableFrame.size.width);
+     // Il faut ajuster la taille de la scrollview à celle de la tableview
+     //NSScrollView *scrollView=(NSScrollView *) [tableView superview];
+     //[scrollView setAutoresizingMask: (NSViewWidthSizable | NSViewHeightSizable)];
+
+     
+     // Récupérer la fenêtre
+     NSWindow *window = [[[self windowControllers] firstObject] window];
+     NSRect windowFrame = [window frame];
+
+         
+    // Définir la nouvelle taille de la fenêtre
+    windowFrame.size.width = tableFrame.size.width + 50; // Ajouter une marge si nécessaire
+    
+    // Appliquer la nouvelle taille
+    [window setFrame:windowFrame display:YES animate:NO];
+
 }
 
 // ---------------------------------------------------------------------------------
@@ -394,16 +453,19 @@
     doneTasks= [[NSMutableArray alloc] init];
     clickedLines=[[NSMutableArray alloc] init];
     // Defalt name of the documen.
-    // should be done with the preferences
-    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *fileName=[defaults objectForKey: JMRDefaultFileNameKey];
-    if ((fileName==nil)||( [fileName isEqual:@""]) ) fileName=[NSString  stringWithFormat:@"tasks"]; 
+   
+    //NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+    //NSString *fileName=[defaults objectForKey: JMRDefaultFileNameKey];
+    //if ((fileName==nil)||( [fileName isEqual:@""]) ) fileName=[NSString  stringWithFormat:@"tasks"]; 
+    NSString *fileName=[NSString  stringWithFormat:@"tasks"]; 
+       
+    // NSString *directory=[defaults objectForKey: JMRDirectoryNameKey];
+    //if ((directory==nil)||( [directory isEqual:@""]))  directory=[NSString stringWithFormat:@"%@/Desktop/", NSHomeDirectory()  ]; 
+    
+    NSString *directory=[NSString stringWithFormat:@"%@/Desktop/", NSHomeDirectory()  ]; 
       
-    NSString *directory=[defaults objectForKey: JMRDirectoryNameKey];
-    if ((directory==nil)||( [directory isEqual:@""]))  directory=[NSString stringWithFormat:@"%@/Desktop/", NSHomeDirectory()  ]; 
-      
-    [self setFileName:[NSString stringWithFormat:@"%@/%@.jmr", directory,fileName]];
-    [self setFileType:@"jmr"];
+    [self setFileName:[NSString stringWithFormat:@"%@/%@.gtd", directory,fileName]];
+    [self setFileType:@"gtd"];
     int i;
     for (i=0;i<=20;i++) 
       if ((i%5)==0) [clickedLines insertObject:@"G" atIndex:i];
@@ -649,6 +711,7 @@
 }
 
 //---------------------------------------------------------------
+// A line is added below the selected cell
 
 - (IBAction)addRow:(id)sender { 
   JMRTache *aTask = [self getTacheAtColumn:1 atRow:19];
@@ -660,9 +723,10 @@
     //NSLog(@"On peut enlever");
     int j,i;
     
+    
     int debut=[tableView selectedRow];
-    // On recopie les lignes
-    for (i=18;i>debut;i--) for (j=0;j<3;j++) {
+    // the
+    for (i=19;i>debut+1;i--) for (j=0;j<3;j++) {
       //NSLog(@"i%d j%d",i,2*j+1);
       JMRTache *aTask4;
       NSString *key1=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,i-1];
@@ -674,11 +738,13 @@
     // On enlève la ligne sélectionné
     //NSLog(@"On enleve la dernière ligne");
     for (j=0;j<3;j++) {
-      NSString *key3=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,debut];
+      NSString *key3=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,debut+1];
       [records removeObjectForKey:key3];
     }
+    
+  
     // On met à jour les lignes
-    for (i=18;i>debut;i--) {
+    for (i=19;i>debut;i--) {
       if ([ [clickedLines objectAtIndex:i-1] isEqual: @"G"]) {
         [clickedLines replaceObjectAtIndex:i-1 withObject: @"N" ];
         [clickedLines replaceObjectAtIndex:i withObject: @"G" ];
@@ -714,7 +780,7 @@
     
     //int debut=[tableView selectedRow];
     // On recopie les lignes
-    for (i=debut;i<18;i++) for (j=0;j<3;j++) {
+    for (i=debut;i<19;i++) for (j=0;j<3;j++) {
       //NSLog(@"i%d j%d",i,2*j+1);
       JMRTache *aTask4;
       NSString *key1=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,i+1];
@@ -723,12 +789,13 @@
       if (aTask4!=nil) [records setObject:aTask4 forKey:key2];
       else [records removeObjectForKey:key2];
     }
-    // On enlève la ligne sélectionné
+    // On enlève la dernière ligne 
     //NSLog(@"On enleve la dernière ligne");
-    //for (j=0;j<3;j++) {
-    //  NSString *key3=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,debut];
-    //  [records removeObjectForKey:key3];
-    //}
+    for (j=0;j<3;j++) {
+      NSString *key3=[NSString stringWithFormat : @"colonne%d-%d", 2*j+1,19];
+     [records removeObjectForKey:key3];
+     
+     }
     // On met à jour les lignes
     for (i=debut;i<18;i++) {
       if ([ [clickedLines objectAtIndex:i+1] isEqual: @"G"]) {
