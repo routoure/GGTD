@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Categories=X-GNUstep;
-Name=Ggtd
-StartupWMClass=Ggtd
-Comment=Yet another task manager, but with GNUStep
-Icon=/usr/local/lib/GNUstep/Applications/Ggtd.app/Resources/Ggtd.tiff
-Exec=/usr/local/bin/openapp Ggtd
-MimeType=
