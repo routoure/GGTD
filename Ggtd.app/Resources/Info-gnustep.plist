@@ -1,0 +1,31 @@
+{
+    ApplicationDescription = "Yet another task manager, but with GNUStep";
+    ApplicationName = Ggtd;
+    ApplicationRelease = "0.3";
+    Authors = "Jean-Marc Routoure";
+    Copyright = "Copyright (C) 2025";
+    CopyrightDescription = "Released under GPL Version 3";
+    GSMainMarkupFile = "";
+    NOTE = "Automatically generated, do not edit!";
+    NSExecutable = Ggtd;
+    NSIcon = "Ggtd.tiff";
+    NSMainNibFile = Ggtd;
+    NSMainStoryboardFile = "";
+    NSPrincipalClass = NSApplication;
+    NSTypes = (
+	{
+	    NSDOSExtensions = (
+		gtd
+	    );
+	    NSDocumentClass = Document;
+	    NSHumanReadableName = "Ggtd Document";
+	    NSIcon = "Ggtd.tiff";
+	    NSName = GTD;
+	    NSRole = Editor;
+	    NSUnixExtensions = (
+		gtd
+	    );
+	}
+    );
+    URL = "https://github.com/routoure/GGTD";
+}
