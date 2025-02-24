@@ -64,6 +64,7 @@ The first public version is labelled 0.3.
 
 see TODO.gtd file. This file also indicated the bugs of the current version.
 
+BUG : with the first start, the width column will be incorrect. Open the preference panel and adjust it.
 
 ## Licence
 This software is provided as is with a GPL v3 licence. If you like it, please send me a postcard at [nicepi31.wezegi99@murena.io](mailto:nicepi31.wezegi99@murena.io). Comments and remarks are also welcome !
