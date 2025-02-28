@@ -5,7 +5,7 @@
 
 Ggtd is yet  another "Get Things Done" app but using GNUstep. Another name should have been  : no one should have more than 60 tasks in mind (but it was a little bit to long). 
 
-! [TODO.gtd] (capture.png)
+![TODO.gtd](capture.png)
 
 The aim of this small app is 
  * to have a complete view of all the pending tasks, 
